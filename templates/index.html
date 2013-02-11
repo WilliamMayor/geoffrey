@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+    <head>
+        <title>geoffrey</title>
+    </head>
+    <body>
+        <h1>Welcome to geoffrey!</h1>
+
+        <p>geoffrey is a very minimal continuous integration package for working with BitBucket repositories.</p>
+
+        <p>The only feature is that geoffrey will accept a BitBucket POST notification and then run a bash script accordingly.</p>
+
+        <h2>Why is this useful?</h2>
+
+        <p>I was fed up of having to SSH into my 'production' server only to run some very minimal and simplistic bash commands to get the server running the latest version of a website/application/daemon.</p>
+
+        <p>geoffrey mirrors Jenkins in that it lets you put all of these commands into a single bash script and then have it run every time someone pushes some commits to your repo. Instant updating of your stuff.</p>
+
+        <h2>How do I use it?</h2>
+
+        <ol>
+            <li>Get geoffrey: <a href='https://bitbucket.org/WilliamMayor/geoffrey'>https://bitbucket.org/WilliamMayor/geoffrey</a></li>
+            <li>Get geoffrey running. It's a Flask web application so you can use anything you'd usually use (here's the <a href='http://flask.pocoo.org/docs/quickstart/#deploying-to-a-web-server'>Flask guide)</a>.</li>
+            <li>Create a scripts directory at the root of your geoffrey installation:
+                <pre>
+geoffrey_root/
+    geoffrey.py
+    requirements.txt
+    templates/
+        index.html
+    scripts/ <--
+                </pre>
+            </li>
+            <li>Create a bash script for every repoisitory you'd like to have a script for, put them in the scripts directory:
+                <pre>
+scripts/
+    repo1.sh
+    repo2.sh
+                </pre>
+            </li>
+            <li>Into these scripts place the command you'd like run, here's the example script that keeps this site up to date:</li>
+                <pre>
+#! /bin/bash
+cd /var/www/geoffrey
+hg pull
+hg update
+touch geoffrey.wsgi
+cd -
+                </pre>
+            <li>Add the POST service to your repo specifying the URL of your geoffrey installation. You need to provide a 'repo' parameter, you can optionally provide an 'email' parameter:
+                <ul>
+                    <li><pre>repo=repo2</pre> - the value of this parameter must match the name of one of the scripts you created earlier</li>
+                    <li><pre>email=mail@example.com</pre> - If you'd like an email update when geoffrey runs then specify where that email should be sent</li>
+                </ul>
+            </li>
+            <li>Push a commit to your repo and cross your fingers :)</li>
+        </ol>
+
+    </body>
+</html>
